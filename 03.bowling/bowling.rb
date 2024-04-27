@@ -7,7 +7,7 @@ scores = score.split(',')
 shots = scores.map { |s| s == 'X' ? 10 : s.to_i }
 
 frames = []
-shots.each_with_index do |shot, _i|
+shots.each do |shot|
   if frames.size == 10 # 10フレーム目の場合
     frames.last << shot
   elsif frames.last&.sum == 10 # ストライクの場合
@@ -24,13 +24,9 @@ count = 0
 frames.each do |frame|
   count += 1 # 1フレーム後のフレームを指定するための変数
   point += if frame[0] == 10 # ストライクが出たとき
-             if count <= 8 # 9,10フレーム目以外の場合
-               if frames[count][0] == 10 # 次のフレームもストライクの場合
-                 frame[0] + frames[count][0] + frames[count + 1][0]
-               else # 次のフレームがストライク以外の場合
-                 frame[0] + frames[count][0] + frames[count][1]
-               end
-             elsif count == 9 # 9フレーム目の場合
+             if count <= 8 && frames[count][0] == 10 # 9,10フレーム目以外の場合かつ次のフレームもストライクの場合
+               frame[0] + frames[count][0] + frames[count + 1][0]
+             elsif count <= 9 # 9フレーム目の場合 or 9,10フレーム目以外の場合かつ次のフレームがストライク以外の場合
                frame[0] + frames[count][0] + frames[count][1]
              else # 10フレーム目の場合
                frame.sum
