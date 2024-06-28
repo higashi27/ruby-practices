@@ -1,31 +1,29 @@
 # frozen_string_literal: true
 
-class LS
-  def initialize
-    @files = Dir.glob('*')
-    @number_of_columns = 3
-    sort_files
-  end
+def prepare_file_listing
+  @files = Dir.glob('*')
+  @number_of_columns = 3
+  sort_files
+end
 
-  def sort_files
-    sorted_files = @files.sort
+def sort_files
+  sorted_files = @files.sort
 
-    sorted_files << nil while sorted_files.size % @number_of_columns != 0
+  sorted_files << nil while sorted_files.size % @number_of_columns != 0
 
-    count_row = sorted_files.size / @number_of_columns
-    files_slice = sorted_files.each_slice(count_row).to_a
-    @transposed_files = files_slice.transpose
-  end
+  count_row = sorted_files.size / @number_of_columns
+  files_slice = sorted_files.each_slice(count_row).to_a
+  @transposed_files = files_slice.transpose
+end
 
-  def output_files
-    max_filename = @files.map(&:length).max
-    @transposed_files.each do |file|
-      removed_nil_files = file.compact
-      aligned_files = removed_nil_files.map { |g| g.ljust(max_filename, ' ') }
-      puts aligned_files.join('  ')
-    end
+def output_files
+  max_filename = @files.map(&:length).max
+  @transposed_files.each do |file|
+    removed_nil_files = file.compact
+    aligned_files = removed_nil_files.map { |g| g.ljust(max_filename, ' ') }
+    puts aligned_files.join('  ')
   end
 end
 
-ls = LS.new
-ls.output_files
+prepare_file_listing
+output_files
