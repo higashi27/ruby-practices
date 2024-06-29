@@ -1,12 +1,21 @@
 # frozen_string_literal: true
 
-def prepare_file_listing
+require 'optparse'
+
+def ls_no_arguments
   @files = Dir.glob('*')
-  @number_of_columns = 3
-  sort_files
+  configure_and_sort_files
+  output_files
 end
 
-def sort_files
+def ls_a
+  @files = Dir.entries('.')
+  configure_and_sort_files
+  output_files
+end
+
+def configure_and_sort_files
+  @number_of_columns = 3
   sorted_files = @files.sort
 
   sorted_files << nil while sorted_files.size % @number_of_columns != 0
@@ -25,5 +34,18 @@ def output_files
   end
 end
 
-prepare_file_listing
-output_files
+opt = OptionParser.new
+no_arguments_provided = true
+
+opt.on('-a') do
+  ls_a
+  no_arguments_provided = false
+end
+
+if ARGV.empty?
+  no_arguments_provided = true
+else
+  opt.parse!(ARGV)
+end
+
+ls_no_arguments if no_arguments_provided
