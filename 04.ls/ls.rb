@@ -8,7 +8,6 @@ def prepare_file_listing
 end
 
 def sort_files
-  @number_of_columns = 3
   sorted_files = @files.sort
 
   sorted_files << nil while sorted_files.size % @number_of_columns != 0
