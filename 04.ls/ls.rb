@@ -2,19 +2,12 @@
 
 require 'optparse'
 
-def ls_no_arguments
-  @files = Dir.glob('*')
-  configure_and_sort_files
-  output_files
+def prepare_file_listing
+  @number_of_columns = 3
+  sort_files
 end
 
-def ls_a
-  @files = Dir.entries('.')
-  configure_and_sort_files
-  output_files
-end
-
-def configure_and_sort_files
+def sort_files
   @number_of_columns = 3
   sorted_files = @files.sort
 
@@ -38,7 +31,9 @@ opt = OptionParser.new
 no_arguments_provided = true
 
 opt.on('-a') do
-  ls_a
+  @files = Dir.entries('.')
+  prepare_file_listing
+  output_files
   no_arguments_provided = false
 end
 
@@ -48,4 +43,8 @@ else
   opt.parse!(ARGV)
 end
 
-ls_no_arguments if no_arguments_provided
+if no_arguments_provided
+  @files = Dir.glob('*')
+  prepare_file_listing
+  output_files
+end
