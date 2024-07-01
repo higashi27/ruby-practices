@@ -27,23 +27,16 @@ def output_files
 end
 
 opt = OptionParser.new
-no_arguments_provided = true
 
 opt.on('-a') do
   @files = Dir.entries('.')
-  prepare_file_listing
-  output_files
-  no_arguments_provided = false
 end
 
 if ARGV.empty?
-  no_arguments_provided = true
+  @files = Dir.glob('*')
 else
   opt.parse!(ARGV)
 end
 
-if no_arguments_provided
-  @files = Dir.glob('*')
-  prepare_file_listing
-  output_files
-end
+prepare_file_listing
+output_files
