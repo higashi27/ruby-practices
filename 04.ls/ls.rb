@@ -32,6 +32,10 @@ opt.on('-a') do
   @files = Dir.entries('.')
 end
 
+opt.on('-r') do
+  @files = Dir.entries('.')
+end
+
 if ARGV.empty?
   @files = Dir.glob('*')
 else
