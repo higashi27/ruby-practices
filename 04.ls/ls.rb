@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 def prepare_file_listing
-  @files = Dir.glob('*')
   @number_of_columns = 3
   sort_files
 end
@@ -23,6 +24,18 @@ def output_files
     aligned_files = removed_nil_files.map { |g| g.ljust(max_filename, ' ') }
     puts aligned_files.join('  ')
   end
+end
+
+opt = OptionParser.new
+
+opt.on('-a') do
+  @files = Dir.entries('.')
+end
+
+if ARGV.empty?
+  @files = Dir.glob('*')
+else
+  opt.parse!(ARGV)
 end
 
 prepare_file_listing
