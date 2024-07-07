@@ -21,20 +21,14 @@ def output_files
 end
 
 opt = OptionParser.new
-show_all_files = false
-sort_in_reverse_order = false
+params = {}
 
-opt.on('-a') do
-  show_all_files = true
-end
-
-opt.on('-r') do
-  sort_in_reverse_order = true
-end
+opt.on('-a') { |v| params[:a] = v }
+opt.on('-r') { |v| params[:r] = v }
 
 opt.parse!(ARGV)
 
-show_all_files ? @files = Dir.entries('.') : @files = Dir.glob('*')
-sort_in_reverse_order ? @sorted_files = @files.sort.reverse : @sorted_files = @files.sort
+@files = params[:a] ? Dir.entries('.') : Dir.glob('*')
+@sorted_files = params[:r] ? @files.sort.reverse : @files.sort
 prepare_file_listing
 output_files
