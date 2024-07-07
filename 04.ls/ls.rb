@@ -3,17 +3,11 @@
 require 'optparse'
 
 def prepare_file_listing
-  @number_of_columns = 3
-  sort_files
-end
+  number_of_columns = 3
+  @sorted_files << nil while @sorted_files.size % number_of_columns != 0
 
-def sort_files
-  sorted_files = @files.sort
-
-  sorted_files << nil while sorted_files.size % @number_of_columns != 0
-
-  count_row = sorted_files.size / @number_of_columns
-  files_slice = sorted_files.each_slice(count_row).to_a
+  count_row = @sorted_files.size / number_of_columns
+  files_slice = @sorted_files.each_slice(count_row).to_a
   @transposed_files = files_slice.transpose
 end
 
@@ -27,20 +21,20 @@ def output_files
 end
 
 opt = OptionParser.new
+show_all_files = false
+sort_in_reverse_order = false
 
 opt.on('-a') do
-  @files = Dir.entries('.')
+  show_all_files = true
 end
 
 opt.on('-r') do
-  @files = Dir.entries('.')
+  sort_in_reverse_order = true
 end
 
-if ARGV.empty?
-  @files = Dir.glob('*')
-else
-  opt.parse!(ARGV)
-end
+opt.parse!(ARGV)
 
+show_all_files ? @files = Dir.entries('.') : @files = Dir.glob('*')
+sort_in_reverse_order ? @sorted_files = @files.sort.reverse : @sorted_files = @files.sort
 prepare_file_listing
 output_files
